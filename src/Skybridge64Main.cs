@@ -791,7 +791,31 @@ namespace Skybridge64
             // geladen. Sie steckte frueher als Ressource drin und wurde per
             // Assembly.Load(byte[]) aus dem Speicher geholt - ein Muster, das
             // Virenscanner von Packern kennen und entsprechend bewerten.
-            Starte();
+            //
+            // Fehlt sie, scheitert schon das Laden des Typs XPad - vor jeder Zeile
+            // eigenem Code. Ohne dieses Netz startet das Programm dann wortlos gar
+            // nicht, und der haeufigste Anwenderfehler (nur die EXE aus der ZIP
+            // herausgezogen) sieht aus wie ein kaputtes Programm.
+            try
+            {
+                Starte();
+            }
+            catch (System.IO.FileNotFoundException ex) { Fehlt(ex); }
+            catch (System.IO.FileLoadException ex) { Fehlt(ex); }
+            catch (TypeInitializationException ex) { Fehlt(ex); }
+            catch (BadImageFormatException ex) { Fehlt(ex); }
+        }
+
+        static void Fehlt(Exception ex)
+        {
+            MessageBox.Show(
+                "Skybridge 64 cannot start because a file it needs is missing.\r\n\r\n" +
+                "Keep all files from the ZIP together in one folder:\r\n\r\n" +
+                "    Skybridge64.exe\r\n" +
+                "    Nefarius.ViGEm.Client.dll\r\n" +
+                "    ViGEmBus_1.22.0_x64_x86_arm64.exe\r\n\r\n" +
+                "Details: " + ex.Message,
+                "Skybridge 64", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]

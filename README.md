@@ -116,10 +116,13 @@ Source layout:
 src/       Skybridge64.cs      devices, mapping, layouts, virtual pad
            Skybridge64UI.cs    HUD drawing helpers
            Skybridge64Main.cs  main window, polling loop, fire logic
-assets/    controller photo and application icon
-lib/       Nefarius.ViGEm.Client.dll
-vendor/    ViGEmBus installer, embedded into the EXE
-tools/     helper programs used to produce the icon and the photo
+assets/    controller photo and application icon - build inputs
+vendor/    third-party binaries, both by Nefarius: the ViGEm client library
+           and the ViGEmBus installer. Both ship in the ZIP.
+package/   files that go into the ZIP unchanged: the end-user readme and the
+           two third-party licence texts
+tools/     helper programs that produced the icon and the photo. Not part of
+           the build - included so both are reproducible.
 ```
 
 ## Support
@@ -131,8 +134,8 @@ Entirely optional — the tool is free and always will be.
 
 | Component | Licence | Notes |
 |---|---|---|
-| [ViGEmBus](https://github.com/nefarius/ViGEmBus) by Nefarius Software Solutions e.U. | BSD 3-Clause — [`third-party/ViGEmBus-LICENSE.txt`](third-party/ViGEmBus-LICENSE.txt) | kernel driver, installer bundled in `vendor/` |
-| [ViGEm.NET](https://github.com/nefarius/ViGEm.NET) by Nefarius Software Solutions e.U. | MIT — [`third-party/ViGEm.NET-LICENSE.txt`](third-party/ViGEm.NET-LICENSE.txt) | the `Nefarius.ViGEm.Client.dll` in `lib/` |
+| [ViGEmBus](https://github.com/nefarius/ViGEmBus) by Nefarius Software Solutions e.U. | BSD 3-Clause — [`package/ViGEmBus-LICENSE.txt`](package/ViGEmBus-LICENSE.txt) | kernel driver, installer in `vendor/`, shipped in the ZIP |
+| [ViGEm.NET](https://github.com/nefarius/ViGEm.NET) by Nefarius Software Solutions e.U. | MIT — [`package/ViGEm.NET-LICENSE.txt`](package/ViGEm.NET-LICENSE.txt) | the `Nefarius.ViGEm.Client.dll` in `vendor/` |
 
 Both are independent projects. Their authors have no involvement in Skybridge 64 and do not
 endorse it.

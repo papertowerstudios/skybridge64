@@ -12,8 +12,15 @@
 # der EXE. Das ist unauffaelliger und ehrlicher: das ViGEmBus-Setup ist von Nefarius
 # signiert und kann von jedem selbst geprueft werden.
 #
+# Ordner:
+#   src/       Quelltext
+#   assets/    Symbol und Foto - Bauzutaten
+#   vendor/    fremde Binaerdateien (beide von Nefarius), wandern mit ins Paket
+#   package/   alles, was unveraendert in die ZIP kommt
+#   tools/     Hilfsprogramme, die Symbol und Foto erzeugt haben - nicht Teil des Builds
+#
 # Ergebnis:
-#   Skybridge64.exe          rund 1 MB, nur noch das Foto ist einkompiliert
+#   Skybridge64.exe          rund 1 MB, nur das Foto ist einkompiliert
 #   dist/Skybridge64-1.0.zip das Paket zum Weitergeben
 
 $ErrorActionPreference = 'Stop'
@@ -22,10 +29,12 @@ $csc = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $exe = Join-Path $d 'Skybridge64.exe'
 $out = Join-Path $d 'dist'
 $zip = Join-Path $out 'Skybridge64-1.0.zip'
+$dll = Join-Path $d 'vendor\Nefarius.ViGEm.Client.dll'
 $setup = Get-ChildItem (Join-Path $d 'vendor') -Filter 'ViGEmBus*.exe' | Select-Object -First 1
 
 if (-not (Test-Path $csc)) { Write-Output "csc.exe nicht gefunden: $csc"; return }
-if (-not $setup) { Write-Output 'ViGEmBus-Setup fehlt in vendor/'; return }
+if (-not (Test-Path $dll)) { Write-Output 'Nefarius.ViGEm.Client.dll fehlt in vendor/'; return }
+if (-not $setup)           { Write-Output 'ViGEmBus-Setup fehlt in vendor/'; return }
 
 Get-Process -Name 'Skybridge64' -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep -Milliseconds 500
@@ -34,7 +43,7 @@ Start-Sleep -Milliseconds 500
     /resource:"$d\assets\n64-pad.png,n64-pad.png" `
     /out:"$exe" `
     /r:System.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Core.dll `
-    /r:"$d\lib\Nefarius.ViGEm.Client.dll" `
+    /r:"$dll" `
     "$d\src\Skybridge64.cs" "$d\src\Skybridge64UI.cs" "$d\src\Skybridge64Main.cs"
 
 if ($LASTEXITCODE -ne 0) { Write-Output 'Build fehlgeschlagen'; return }
@@ -46,11 +55,9 @@ New-Item -ItemType Directory $stage | Out-Null
 
 # Die DLL MUSS genau so heissen - der .NET-Loader sucht nach dem Assembly-Namen.
 Copy-Item $exe $stage
-Copy-Item (Join-Path $d 'lib\Nefarius.ViGEm.Client.dll') $stage
+Copy-Item $dll $stage
 Copy-Item $setup.FullName $stage
-Copy-Item (Join-Path $d 'dist-readme\README.txt') $stage
-Copy-Item (Join-Path $d 'third-party\ViGEmBus-LICENSE.txt') $stage
-Copy-Item (Join-Path $d 'third-party\ViGEm.NET-LICENSE.txt') $stage
+Copy-Item (Join-Path $d 'package\*') $stage
 
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip -CompressionLevel Optimal
