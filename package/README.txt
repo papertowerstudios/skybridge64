@@ -71,6 +71,13 @@ The pad fires by itself, all buttons at once
     A Nintendo wireless N64 controller connected by USB cable does this. The
     cable is for charging only  -  connect it over Bluetooth to play.
 
+The wireless pad will not reconnect
+    Nintendo's pad reconnects on its own initiative and Windows cannot force
+    it. Press A first - that wakes it if it is only asleep. If nothing
+    happens, remove it under Settings > Bluetooth, hold SYNC until the lights
+    blink fast, and pair it again. Windows may still show it as connected
+    while it is not; that display is not reliable for this pad.
+
 Nothing happens at all
     Check the status line at the top. It says what is missing.
 

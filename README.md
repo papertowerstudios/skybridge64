@@ -88,6 +88,12 @@ remembers it from then on, stored in `%LOCALAPPDATA%\Skybridge64\`.
 > **Nintendo's wireless N64 pad must be connected over Bluetooth.** Over the USB cable it
 > reports 18 buttons and sends nonsense — the cable is for charging only. Skybridge 64 detects
 > this and says so instead of firing on its own.
+>
+> That pad also reconnects on its own initiative, and Windows cannot force it. If it stops
+> coming back after being disconnected for a while, press **A** first — that wakes it when it is
+> only asleep. If nothing happens, remove it under *Settings → Bluetooth*, hold **SYNC** until
+> the lights blink fast, and pair it again. Windows may still show it as connected while it is
+> not; that display is not reliable for this pad.
 
 ## Building it yourself
 
