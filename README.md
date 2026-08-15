@@ -4,8 +4,8 @@
 
 *Wild Blue Skies* expects an Xbox-style gamepad. Skybridge 64 reads your N64 controller and
 presents it to Windows as a virtual Xbox 360 pad, mapped so that it plays the way *Star Fox 64*
-(*Lylat Wars* in PAL regions) did on the original hardware. One file, no installation, no
-configuration.
+(*Lylat Wars* in PAL regions) did on the original hardware. No installer, no configuration —
+unpack and run.
 
 *Not affiliated with, authorised by or endorsed by Nintendo, Chuhai Labs, VITEI BACKROOM or
 Balor Games.*
@@ -54,10 +54,13 @@ C up is deliberately unassigned — the game has nothing for it.
 
 ## Getting started
 
-1. Download the ZIP from [Releases](../../releases), unpack it anywhere.
+1. Download the ZIP from [Releases](../../releases), unpack it anywhere — **keep the files
+   together in one folder**.
 2. Run `Skybridge64.exe`.
 3. If it asks, press **Set up now** once — that installs the ViGEmBus driver, which is what
-   creates the virtual gamepad. The installer is built into the EXE; nothing is downloaded.
+   creates the virtual gamepad. The installer is the file sitting next to the EXE; nothing is
+   downloaded, and you are welcome to run or inspect it yourself first — it is signed by
+   Nefarius.
 4. Connect your N64 controller — a USB adapter or a wireless pad.
 5. Start the game.
 
@@ -100,8 +103,12 @@ this repository.
   because these adapters are DirectInput-only and games like this one want XInput.
 - Output goes through [ViGEmBus](https://github.com/nefarius/ViGEmBus), a signed kernel driver
   that presents a genuine virtual Xbox 360 controller to Windows.
-- The photo, the icon, the ViGEm client library and the ViGEmBus installer are all embedded as
-  resources, which is why the shipped EXE is a single file.
+- **The ViGEm library and the ViGEmBus installer are shipped as plain files next to the EXE, on
+  purpose.** An earlier build embedded both and unpacked the installer at runtime to launch it
+  elevated. That is textbook dropper behaviour, and Windows Defender duly flagged it
+  (`Trojan:Win32/Sabsik.EN.B!ml`) and deleted the file on extraction. Visible files are not only
+  quieter — they are more honest: you can check the installer's Nefarius signature yourself
+  before anything runs. Only the controller photo is still a compiled-in resource.
 
 Source layout:
 

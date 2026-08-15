@@ -177,8 +177,10 @@ namespace Skybridge64
                 List<string> log = new List<string>();
                 try
                 {
-                    ziel = SetupAuspacken();
-                    log.Add("setup ausgepackt nach " + ziel);
+                    ziel = SetupFinden();
+                    if (ziel == "")
+                        throw new Exception("The ViGEmBus installer is missing. Keep all files from the ZIP together in one folder.");
+                    log.Add("setup gefunden: " + ziel);
                     int code = SetupStarten(ziel, "/exenoui /qn");     // still, ohne Klickstrecke
                     log.Add("still  '/exenoui /qn'  -> exitcode " + code);
                     if (code == 1602 || code == 1223) abgebrochen = true;
@@ -203,8 +205,6 @@ namespace Skybridge64
                 }
                 catch (Exception ex) { log.Add("Ausnahme: " + ex.Message); melde = ex.Message; }
 
-                if (ziel != "") { try { System.IO.File.Delete(ziel); } catch { } }
-
                 treiberFehlt = !XPad.TreiberVorhanden();
                 log.Add("ergebnis: treiberFehlt=" + treiberFehlt + " abgebrochen=" + abgebrochen + " neustart=" + neustart);
                 if (treiberFehlt)
@@ -224,24 +224,24 @@ namespace Skybridge64
             t.Start();
         }
 
-        static string SetupAuspacken()
+        // Das Treiber-Setup liegt NEBEN der EXE, nicht darin.
+        //
+        // Frueher steckte es als Ressource in der EXE und wurde zur Laufzeit auf die
+        // Platte geschrieben und erhoeht gestartet. Genau dieses Muster - eingebettete
+        // zweite EXE, ablegen, mit Adminrechten ausfuehren - stufen Virenscanner als
+        // Dropper ein; Defender meldete Trojan:Win32/Sabsik.EN.B!ml und loeschte die
+        // Datei beim Entpacken. Eine sichtbare Datei daneben ist nicht nur unauffaellig,
+        // sondern ehrlicher: sie ist von Nefarius signiert und jeder kann sie pruefen.
+        static string SetupFinden()
         {
-            string ziel = System.IO.Path.Combine(PadLayout.Ordner, "ViGEmBus-Setup.exe");
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            using (System.IO.Stream st = asm.GetManifestResourceStream("ViGEmBus-Setup.exe"))
+            try
             {
-                if (st == null) throw new Exception("Driver setup is missing from this build.");
-                byte[] roh = new byte[st.Length];
-                int gelesen = 0;
-                while (gelesen < roh.Length)
-                {
-                    int n = st.Read(roh, gelesen, roh.Length - gelesen);
-                    if (n <= 0) break;
-                    gelesen += n;
-                }
-                System.IO.File.WriteAllBytes(ziel, roh);
+                string ordner = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+                string[] treffer = System.IO.Directory.GetFiles(ordner, "ViGEmBus*.exe");
+                if (treffer.Length > 0) return treffer[0];
             }
-            return ziel;
+            catch { }
+            return "";
         }
 
         static int SetupStarten(string datei, string args)
@@ -740,7 +740,7 @@ namespace Skybridge64
                 else
                     band.Setze(Farbe.Rot, "One click and you are ready",
                         treiberMeldung == ""
-                            ? "Skybridge 64 needs a small driver for the virtual controller. It is built in - just press the button."
+                            ? "Skybridge 64 needs a small driver for the virtual controller. It is in this folder - just press the button."
                             : treiberMeldung);
                 return;
             }
@@ -787,27 +787,11 @@ namespace Skybridge64
         [STAThread]
         static void Main()
         {
-            // Die ViGEm-Bibliothek steckt als Ressource in der EXE. Der Auflöser muss
-            // stehen, BEVOR ein Typ daraus geladen wird - deshalb der getrennte Start.
-            AppDomain.CurrentDomain.AssemblyResolve += Aufloesen;
+            // Nefarius.ViGEm.Client.dll liegt neben der EXE und wird ganz normal
+            // geladen. Sie steckte frueher als Ressource drin und wurde per
+            // Assembly.Load(byte[]) aus dem Speicher geholt - ein Muster, das
+            // Virenscanner von Packern kennen und entsprechend bewerten.
             Starte();
-        }
-
-        static System.Reflection.Assembly Aufloesen(object sender, ResolveEventArgs e)
-        {
-            try
-            {
-                string name = new System.Reflection.AssemblyName(e.Name).Name + ".dll";
-                System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-                using (System.IO.Stream st = asm.GetManifestResourceStream(name))
-                {
-                    if (st == null) return null;
-                    byte[] roh = new byte[st.Length];
-                    st.Read(roh, 0, roh.Length);
-                    return System.Reflection.Assembly.Load(roh);
-                }
-            }
-            catch { return null; }
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]

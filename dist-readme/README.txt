@@ -38,6 +38,7 @@ A also confirms menus and skips cutscenes.
 
 HOW TO USE
 
+0. Unpack the whole ZIP into one folder and keep the files together.
 1. Start Skybridge64.exe.
 2. Connect your N64 controller  -  a USB adapter or a wireless pad.
    Around 40 adapter models are recognised automatically. An unknown one asks
@@ -51,8 +52,10 @@ number Windows gave the N64 pad; the game accepts it either way.
 
 Nothing to install and nothing to configure. The first time you run it,
 Skybridge 64 may ask to set up a small driver: press "Set up now", confirm the
-Windows prompt, and it carries on by itself. The driver is built into the
-program, so there is nothing to download.
+Windows prompt, and it carries on by itself. The driver installer is the file
+ViGEmBus_1.22.0_x64_x86_arm64.exe sitting next to the program - nothing is
+downloaded, and you may run or inspect it yourself first. It is signed by
+Nefarius Software Solutions.
 
 Windows may warn about an unknown publisher because this program is not code
 signed. Choose "More info" and then "Run anyway".
@@ -70,6 +73,10 @@ The pad fires by itself, all buttons at once
 
 Nothing happens at all
     Check the status line at the top. It says what is missing.
+
+"The ViGEmBus installer is missing"
+    The files from the ZIP were separated. Keep Skybridge64.exe, the DLL and
+    the ViGEmBus installer together in the same folder.
 
 F8 pauses and resumes at any time, even while the game is in focus.
 
