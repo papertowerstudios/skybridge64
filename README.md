@@ -10,6 +10,10 @@ unpack and run.
 *Not affiliated with, authorised by or endorsed by Nintendo, Chuhai Labs, VITEI BACKROOM or
 Balor Games.*
 
+![Skybridge 64 detecting an N64 adapter and showing the control scheme](assets/screenshot.png)
+
+Nothing to set up. Start it, plug the pad in, and it says so.
+
 ---
 
 ## The point: one button for both shots
