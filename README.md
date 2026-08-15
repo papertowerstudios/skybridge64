@@ -58,8 +58,9 @@ C up is deliberately unassigned — the game has nothing for it.
 
 ## Getting started
 
-1. Download the ZIP from [Releases](../../releases), unpack it anywhere — **keep the files
-   together in one folder**.
+1. Download the ZIP from [Releases](../../releases) or from
+   [itch.io](https://papertowerstudios.itch.io/skybridge64), unpack it anywhere — **keep the
+   files together in one folder**.
 2. Run `Skybridge64.exe`.
 3. If it asks, press **Set up now** once — that installs the ViGEmBus driver, which is what
    creates the virtual gamepad. The installer is the file sitting next to the EXE; nothing is
