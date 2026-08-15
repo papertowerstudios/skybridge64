@@ -1,0 +1,17 @@
+# Bauergebnisse - werden aus den Quellen erzeugt, gehoeren nicht ins Repository
+Skybridge64.exe
+dist/
+*.pdb
+
+# Windows / Editoren
+Thumbs.db
+desktop.ini
+.vs/
+*.user
+*.suo
+
+# Sicherungen und Kram, der beim Arbeiten anfaellt
+*.bak
+*.bak[0-9]
+*.tmp
+*.log
